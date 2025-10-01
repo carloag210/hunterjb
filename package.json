@@ -1,0 +1,12 @@
+{
+  "name": "hunterjb",
+  "version": "1.0.0",
+  "description": "Tienda vintage y coleccionables HunterJB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
