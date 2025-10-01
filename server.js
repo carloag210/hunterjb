@@ -1,5 +1,7 @@
 const express = require("express");
 const path = require("path");
+const multer = require("multer");
+const { Pool } = require("pg"); // Asegúrate de requerir Pool y tu config de DB
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -7,19 +9,25 @@ const PORT = process.env.PORT || 3000;
 // Servir archivos estáticos de /public
 app.use(express.static(path.join(__dirname, "public")));
 
+// Parsear formularios HTML
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
+// Configuración de Multer para subir imágenes
+const upload = multer({ dest: "public/images/" });
 
-// Ruta catch-all para SPA o páginas no encontradas
-
-const multer = require("multer");       // Para subir imágenes
-const upload = multer({ dest: "public/images/" }); // Carpeta donde guardará las fotos
+// Pool de PostgreSQL
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
 // Página de administración
 app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "public/admin.html"));
 });
 
-// Endpoint para agregar productos desde el formulario
+// Endpoint para agregar productos
 app.post("/admin/add-producto", upload.single("imagen"), async (req, res) => {
   const { nombre, precio, link } = req.body;
   const imagen = req.file ? "images/" + req.file.filename : "";
@@ -36,6 +44,7 @@ app.post("/admin/add-producto", upload.single("imagen"), async (req, res) => {
   }
 });
 
+// Catch-all al final
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
