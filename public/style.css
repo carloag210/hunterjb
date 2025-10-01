@@ -1,3 +1,9 @@
+.logo {
+  max-width: 120px; /* ajusta el tamaño */
+  display: block;
+  margin: 0 auto 10px; /* centrado y con espacio debajo */
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
